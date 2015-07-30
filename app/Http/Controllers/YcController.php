@@ -125,4 +125,14 @@ class YcController extends Controller
     {
         return view('authorization');
     }
+
+    /**
+     * event
+     *
+     */
+    public function event()
+    {
+        \Log::info(file_get_contents("php://input"));
+    }
+
 }

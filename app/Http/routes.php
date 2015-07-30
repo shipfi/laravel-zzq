@@ -48,3 +48,10 @@ Route::get('apps/authorization','YcController@authorization');
 Route::get('identity',['middleware'=>'wx-auth','as'=>'identity','uses'=>'YcController@identity']);
 
 Route::get('wx-auth', ['as' => 'wx-auth', 'uses' => 'WeixinAuth\WeixinAuthController@auth']);
+
+/**
+ * 事件
+ */
+
+Route::get('event',['as'=>'event','uses'=>'YcController@event']);
+
