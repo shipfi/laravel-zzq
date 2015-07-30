@@ -132,7 +132,20 @@ class YcController extends Controller
      */
     public function event()
     {
+
+//
+//        $xml = "<xml><ToUserName><![CDATA[tj92b18aa012990bdf]]></ToUserName>
+//<Encrypt><![CDATA[emyaw9cS6ic7paSb7NvkiDNmVOXwtS/tz7IrnxXay+e3P7FRw1HD17CHNqJGZNMxJGAy9FAz0LQ69WpjG+RhXOk5vVpaBj76/lwL2JimdMzXSwyYAzXWNpoBS/Fn1b0YxH22n5i8H0zW0QzCMCtsx3bixeRWQog2zWM4LiPxUJkhv+9QOjC2HvJl930N0t3d80SSlyKQFtMD9UHOlJLsC6IEuR/QdT9Ws+1/JgDG3T/pJO6n7UX1nuZ+zb5UMXmh7fJxx0jq+eRvh+bY27kTWjSrmVQ0E3tOjd464JxwZU73GWlfTklCqZd67iXUeFvhis8jPNT7gBoArgUr2bEjd0bGuWQ1PkzoIYynnaz77nFJlR02MkgeympOVFGeuiMr]]></Encrypt>
+//<AgentID><![CDATA[]]></AgentID>
+//</xml>";
+//
+//        $xmlPaser = new \XMLParse();
+//        $obj = $xmlPaser->extract($xml);
+//
+//        print_r($obj);
+//        exit;
         \Log::info(file_get_contents("php://input"));
+        \Log::info($_GET);
     }
 
 }
