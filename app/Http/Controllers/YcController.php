@@ -133,19 +133,41 @@ class YcController extends Controller
     public function event()
     {
 
-//
-//        $xml = "<xml><ToUserName><![CDATA[tj92b18aa012990bdf]]></ToUserName>
-//<Encrypt><![CDATA[emyaw9cS6ic7paSb7NvkiDNmVOXwtS/tz7IrnxXay+e3P7FRw1HD17CHNqJGZNMxJGAy9FAz0LQ69WpjG+RhXOk5vVpaBj76/lwL2JimdMzXSwyYAzXWNpoBS/Fn1b0YxH22n5i8H0zW0QzCMCtsx3bixeRWQog2zWM4LiPxUJkhv+9QOjC2HvJl930N0t3d80SSlyKQFtMD9UHOlJLsC6IEuR/QdT9Ws+1/JgDG3T/pJO6n7UX1nuZ+zb5UMXmh7fJxx0jq+eRvh+bY27kTWjSrmVQ0E3tOjd464JxwZU73GWlfTklCqZd67iXUeFvhis8jPNT7gBoArgUr2bEjd0bGuWQ1PkzoIYynnaz77nFJlR02MkgeympOVFGeuiMr]]></Encrypt>
-//<AgentID><![CDATA[]]></AgentID>
-//</xml>";
-//
-//        $xmlPaser = new \XMLParse();
-//        $obj = $xmlPaser->extract($xml);
-//
-//        print_r($obj);
-//        exit;
-        \Log::info(file_get_contents("php://input"));
-        \Log::info($_GET);
+        // $sReqMsgSig = HttpUtils.ParseUrl("msg_signature");
+        $sReqMsgSig = $this->request->get('msg_signature');
+// $sReqTimeStamp = HttpUtils.ParseUrl("timestamp");
+        $sReqTimeStamp = $this->request->get('timestamp');
+// $sReqNonce = HttpUtils.ParseUrl("nonce");
+        $sReqNonce = $this->request->get('nonce');
+// post请求的密文数据
+// $sReqData = HttpUtils.PostData();
+        $sReqData = file_get_contents("php://input");
+        // 假设企业号在公众平台上设置的参数如下
+        $encodingAesKey = "n5AgWaolmPuIeHoHcLBXWiXR5RmNHtFzXVgj8tVqxJe";
+        $token = "ge6B2x2RcInLTv2nPWcQmEGvMwF7Ad";
+        $corpId = "wxf10574ad995ce8b5";
+        $wxcpt = new \WXBizMsgCrypt($token, $encodingAesKey, $corpId);
+        $sMsg = "";  // 解析之后的明文
+        $errCode = $wxcpt->DecryptMsg($sReqMsgSig, $sReqTimeStamp, $sReqNonce, $sReqData, $sMsg);
+        if ($errCode == 0) {
+            // 解密成功，sMsg即为xml格式的明文
+            // TODO: 对明文的处理
+            // For example:
+            $xml = new \DOMDocument();
+            $xml->loadXML($sMsg);
+            $content = $xml->getElementsByTagName('Content')->item(0)->nodeValue;
+            \Log::info("content: " . $content . "\n\n");
+            // ...
+            // ...
+        } else {
+            \Log::error("ERR: " . $errCode . "\n\n");
+            //exit(-1);
+        }
+    }
+
+    public function setSuitTicketInRedis($key,$ticket)
+    {
+
     }
 
 }
