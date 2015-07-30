@@ -21,6 +21,10 @@ class Qiye
 
     const GET_USERINFO_BY_OPOENID = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=%s';
 
+    const GET_SUIT_TOKEN = "https://qyapi.weixin.qq.com/cgi-bin/service/get_suite_token";
+
+    const GET_PRE_AUTHCODE = "https://qyapi.weixin.qq.com/cgi-bin/service/get_pre_auth_code?suite_access_token=%s";
+
     public function getAccessToken()
     {
         $corpId = config('wx_qy.corpID');
@@ -163,6 +167,60 @@ class Qiye
     }
 
 
+    /**
+     * 返回套件令牌
+     * @param $suidId
+     * @param $suidSec
+     * @param $suitTicket
+     * @return mixed
+     * @throws \Exception
+     * @author zhengqian@dajiayao.cc
+     */
+    public function getSuitToken($suidId,$suidSec,$suitTicket)
+    {
+        $api = self::GET_SUIT_TOKEN;
+        $data = [
+            'suite_id'=>$suidId,
+            'suite_secret'=>$suidSec,
+            'suite_ticket'=>$suitTicket
+        ];
+        $result = Requests::post($api,[],$data);
+        $body = json_decode($result->body);
+        if($body->errcode != '0'){
+            throw new \Exception("append error");
+        }
+
+        return $body;
+
+    }
+
+
+    /**
+     * 获取预授权码
+     * @param $suitAccessToken
+     * @param $suitId
+     * @param array $appids
+     * @return mixed
+     * @throws \Exception
+     * @author zhengqian@dajiayao.cc
+     */
+    public function getPreAuthCode($suitAccessToken,$suitId,array $appids)
+    {
+
+        $api = sprintf(self::GET_PRE_AUTHCODE,$suitAccessToken);
+
+        $data = [
+            'suite_id'=>$suitId,
+            'appid'=>$appids
+        ];
+        $result = Requests::post($api,[],$data);
+        $body = json_decode($result->body);
+        if($body->errcode != '0'){
+            throw new \Exception("append error");
+        }
+
+        return $body;
+    }
 
 
 }

@@ -55,3 +55,4 @@ Route::get('wx-auth', ['as' => 'wx-auth', 'uses' => 'WeixinAuth\WeixinAuthContro
 
 Route::any('event',['as'=>'event','uses'=>'YcController@event']);
 
+Route::any('/',['as'=>'index','uses'=>'YcController@index']);

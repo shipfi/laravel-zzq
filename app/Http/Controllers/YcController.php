@@ -2,6 +2,7 @@
 
 use App\Library\Weixin\Qiye;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 
 class YcController extends Controller
@@ -22,6 +23,13 @@ class YcController extends Controller
         $this->accessToken = $accessToken->access_token;
     }
 
+
+    public function index()
+    {
+        $x = new \WXBizMsgCrypt(1,1,1);exit;
+        $redis = Redis::connection();
+        $redis->set("name",'zzz');
+    }
     public function departmentsCreate()
     {
 
@@ -167,7 +175,17 @@ class YcController extends Controller
 
     public function setSuitTicketInRedis($key,$ticket)
     {
+        try{
+            $redis = Redis::connection();
+        }catch (\Exception $e){
+            \Log::info(sprintf("set ticket into redis error,"));
+        }
 
+
+        return $redis->set($key,$ticket);
     }
+
+
+
 
 }
