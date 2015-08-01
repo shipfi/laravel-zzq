@@ -8,6 +8,18 @@ use Illuminate\Support\Facades\Redis;
 class YcController extends Controller
 {
 
+    const SUIT_TICKET_KEY = "suit-ticket";
+
+    const SUIT_ID = "tj92b18aa012990bdf";
+
+    const TOKEN = "yrKNqJnhV97JnoRtB4YNYE";
+
+    const ASE_KEY = "fJPcFUigbfMHevAwSr3a9xg8Of4Pl3l6PgjGsI3x8w1";
+
+    const CORP_ID = 'wxf10574ad995ce8b5';
+
+    const SUIT_SEC = "b7skTTjjvlGjP9C9qvTlsUaJCnoR4XyuNrs4df0q5I6p3-Ib3SZh2_y-rj8bLfEY";
+
     public function __construct(Qiye $qiye,Request $request)
     {
         $this->qy = $qiye;
@@ -131,7 +143,31 @@ class YcController extends Controller
      */
     public function authorization()
     {
-        return view('authorization');
+        $suitTickt = $this->getSuitTicketFromRedis(self::SUIT_TICKET_KEY);
+        if ( ! $suitTickt){
+            throw new \Exception('get suit ticket from redis error');
+        }
+        try{
+            $body = $this->qy->getSuitToken(self::SUIT_ID,self::SUIT_SEC,$suitTickt);
+        }catch (\Exception $e){
+            echo "get suit token".$e->getMessage();
+            exit;
+        }
+        $suite_access_token = $body->suite_access_token;
+
+        if( ! $suite_access_token){
+            exit("get suit access token error");
+        }
+
+        $body = $this->qy->getPreAuthCode($suite_access_token,self::SUIT_ID,[]);
+
+        $preAuthCode = $body->pre_auth_code;
+
+        if( ! $preAuthCode)
+        {
+            exit('get pre_auth_code error');
+        }
+        return view('authorization')->with('suit_ticket',$suitTickt)->with('pre_auth_code',$preAuthCode);
     }
 
     /**
@@ -159,9 +195,9 @@ class YcController extends Controller
 
         \Log::info($sReqData);
         // 假设企业号在公众平台上设置的参数如下
-        $encodingAesKey = "fJPcFUigbfMHevAwSr3a9xg8Of4Pl3l6PgjGsI3x8w1";
-        $token = "yrKNqJnhV97JnoRtB4YNYE";
-        $corpId = "wxf10574ad995ce8b5";
+        $encodingAesKey = self::ASE_KEY;
+        $token = self::TOKEN;
+        $corpId = self::CORP_ID;
         \Log::info($corpId);
         $wxcpt = new \WXBizMsgCrypt($token, $encodingAesKey, $corpId);
 
@@ -173,7 +209,7 @@ class YcController extends Controller
             // For example:
             $xml = new \DOMDocument();
             $xml->loadXML($sMsg);
-            $content = $xml->getElementsByTagName('Content')->item(0)->nodeValue;
+            $content = $xml->getElementsByTagName('SuiteTicket')->item(0)->nodeValue;
             \Log::info("content: " . $content . "\n\n");
             // ...
             // ...
@@ -181,6 +217,9 @@ class YcController extends Controller
             \Log::error("ERR: " . $errCode . "\n\n");
             //exit(-1);
         }
+
+
+        $this->setSuitTicketInRedis(self::SUIT_TICKET_KEY,$content);
     }
 
     public function setSuitTicketInRedis($key,$ticket)

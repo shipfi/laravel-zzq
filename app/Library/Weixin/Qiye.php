@@ -183,13 +183,11 @@ class Qiye
             'suite_secret'=>$suidSec,
             'suite_ticket'=>$suitTicket
         ];
-        $result = Requests::post($api,[],$data);
+        $result = Requests::post($api,[],json_encode($data));
         $body = json_decode($result->body);
-        if($body->errcode != '0'){
-            throw new \Exception("append error");
-        }
 
         return $body;
+
 
     }
 
@@ -212,8 +210,9 @@ class Qiye
             'suite_id'=>$suitId,
             'appid'=>$appids
         ];
-        $result = Requests::post($api,[],$data);
+        $result = Requests::post($api,[],json_encode($data));
         $body = json_decode($result->body);
+
         if($body->errcode != '0'){
             throw new \Exception("append error");
         }
