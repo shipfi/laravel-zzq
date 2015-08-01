@@ -140,6 +140,8 @@ class YcController extends Controller
      */
     public function event()
     {
+        \Log::info($_GET);
+        \Log::info(file_get_contents("php://input"));
 
         // $sReqMsgSig = HttpUtils.ParseUrl("msg_signature");
         $sReqMsgSig = $this->request->get('msg_signature');

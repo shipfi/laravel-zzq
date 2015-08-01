@@ -204,7 +204,7 @@ class Qiye
      * @throws \Exception
      * @author zhengqian@dajiayao.cc
      */
-    public function getPreAuthCode($suitAccessToken,$suitId,array $appids)
+    public function getPreAuthCode($suitAccessToken,$suitId,array $appids=[])
     {
 
         $api = sprintf(self::GET_PRE_AUTHCODE,$suitAccessToken);
