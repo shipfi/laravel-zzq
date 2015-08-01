@@ -140,8 +140,8 @@ class YcController extends Controller
      */
     public function event()
     {
-        \Log::info($_GET);
-        \Log::info(file_get_contents("php://input"));
+//        \Log::info($_GET);
+//        \Log::info(file_get_contents("php://input"));
 
         // $sReqMsgSig = HttpUtils.ParseUrl("msg_signature");
         $sReqMsgSig = $this->request->get('msg_signature');
@@ -151,7 +151,12 @@ class YcController extends Controller
         $sReqNonce = $this->request->get('nonce');
 // post请求的密文数据
 // $sReqData = HttpUtils.PostData();
+        \Log::info($sReqMsgSig);
+        \Log::info($sReqTimeStamp);
+        \Log::info($sReqNonce);
         $sReqData = file_get_contents("php://input");
+
+        \Log::info($sReqData);
         // 假设企业号在公众平台上设置的参数如下
         $encodingAesKey = "n5AgWaolmPuIeHoHcLBXWiXR5RmNHtFzXVgj8tVqxJe";
         $token = "ge6B2x2RcInLTv2nPWcQmEGvMwF7Ad";
