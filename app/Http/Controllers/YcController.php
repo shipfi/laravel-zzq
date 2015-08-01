@@ -158,9 +158,10 @@ class YcController extends Controller
 
         \Log::info($sReqData);
         // 假设企业号在公众平台上设置的参数如下
-        $encodingAesKey = "n5AgWaolmPuIeHoHcLBXWiXR5RmNHtFzXVgj8tVqxJe";
-        $token = "ge6B2x2RcInLTv2nPWcQmEGvMwF7Ad";
+        $encodingAesKey = "fJPcFUigbfMHevAwSr3a9xg8Of4Pl3l6PgjGsI3x8w1";
+        $token = "yrKNqJnhV97JnoRtB4YNYE";
         $corpId = "wxf10574ad995ce8b5";
+        \Log::info($corpId);
         $wxcpt = new \WXBizMsgCrypt($token, $encodingAesKey, $corpId);
         $sMsg = "";  // 解析之后的明文
         $errCode = $wxcpt->DecryptMsg($sReqMsgSig, $sReqTimeStamp, $sReqNonce, $sReqData, $sMsg);
