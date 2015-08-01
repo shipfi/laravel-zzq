@@ -134,7 +134,7 @@ class Prpcrypt
 			$len_list = unpack("N", substr($content, 0, 4));
 			$xml_len = $len_list[1];
 			$xml_content = substr($content, 4, $xml_len);
-			$from_corpid = substr($content, $xml_len + 4);
+			$from_corpid = rtrim(substr($content, $xml_len + 4));
 		} catch (Exception $e) {
 			print $e;
 			return array(ErrorCode::$IllegalBuffer, null);

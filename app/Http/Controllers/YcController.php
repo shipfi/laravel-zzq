@@ -163,6 +163,7 @@ class YcController extends Controller
         $corpId = "wxf10574ad995ce8b5";
         \Log::info($corpId);
         $wxcpt = new \WXBizMsgCrypt($token, $encodingAesKey, $corpId);
+
         $sMsg = "";  // 解析之后的明文
         $errCode = $wxcpt->DecryptMsg($sReqMsgSig, $sReqTimeStamp, $sReqNonce, $sReqData, $sMsg);
         if ($errCode == 0) {
