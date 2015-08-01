@@ -157,7 +157,6 @@ class Qiye
     {
         $api = sprintf(self::GET_USERINFO_BY_OPOENID,$accessToken,$openid,$lang);
         $result = Requests::get($api);
-        print_r($result);exit;
         $body = json_decode($result->body);
         if($body->errcode != '0'){
             throw new \Exception("get user info error");

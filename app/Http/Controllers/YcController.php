@@ -196,5 +196,18 @@ class YcController extends Controller
 
 
 
+    public function getSuitTicketFromRedis($key)
+    {
+        try{
+            $redis = Redis::connection();
+        }catch (\Exception $e){
+            \Log::info(sprintf("set ticket into redis error,"));
+        }
+
+
+        return $redis->get($key);
+    }
+
+
 
 }
