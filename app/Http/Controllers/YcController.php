@@ -10,6 +10,10 @@ class YcController extends Controller
 
     const SUIT_TICKET_KEY = "suit-ticket";
 
+    const SUIT_ACCESSTOKEN_KEY = 'suit-access-token';
+
+    const SUIT_PRE_AUTH_KEY = 'suit-pre-auth-code';
+
     const SUIT_ID = "tj92b18aa012990bdf";
 
     const TOKEN = "yrKNqJnhV97JnoRtB4YNYE";
@@ -155,6 +159,9 @@ class YcController extends Controller
         }
         $suite_access_token = $body->suite_access_token;
 
+        $this->setSuitTicketInRedis(self::SUIT_ACCESSTOKEN_KEY,$suite_access_token);
+
+
         if( ! $suite_access_token){
             exit("get suit access token error");
         }
@@ -247,6 +254,24 @@ class YcController extends Controller
 
         return $redis->get($key);
     }
+
+
+    /**
+     * 授权毁掉页面
+     * @author zhengqian@dajiayao.cc
+     */
+    public function authCallBack()
+    {
+        $authCode = $this->request->get('auth_code');
+
+        $body = $this->qy->getPermanentCode($this->getSuitTicketFromRedis(self::SUIT_ACCESSTOKEN_KEY),self::SUIT_ID,$authCode);
+
+
+        //设置菜单
+
+        echo json_encode($body);
+    }
+
 
 
 

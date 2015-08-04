@@ -21,9 +21,14 @@ class Qiye
 
     const GET_USERINFO_BY_OPOENID = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=%s';
 
+    const SET_MENU = "https://qyapi.weixin.qq.com/cgi-bin/menu/create?access_token=%s&agentid=%s";
+
     const GET_SUIT_TOKEN = "https://qyapi.weixin.qq.com/cgi-bin/service/get_suite_token";
 
     const GET_PRE_AUTHCODE = "https://qyapi.weixin.qq.com/cgi-bin/service/get_pre_auth_code?suite_access_token=%s";
+
+    const GET_PERMANENT_CODE = "https://qyapi.weixin.qq.com/cgi-bin/service/get_permanent_code?suite_access_token=%s";
+
 
     public function getAccessToken()
     {
@@ -120,6 +125,16 @@ class Qiye
         return $body->userlist;
     }
 
+
+    /**
+     * 设置菜单
+     * @author zhengqian@dajiayao.cc
+     */
+    public function setMenu($accessToken,$agentid)
+    {
+        $api = sprintf(self::SET_MENU,$accessToken,$agentid);
+
+    }
 
     public function getUserInfoByCode($accessToken,$code)
     {
@@ -218,6 +233,30 @@ class Qiye
         }
 
         return $body;
+    }
+
+    /**
+     * 获取永久授权码
+     * @param $suiteAccessToken
+     * @param $suiteId
+     * @param $authCode
+     * @return mixed
+     * @author zhengqian@dajiayao.cc
+     */
+    public function getPermanentCode($suiteAccessToken,$suiteId,$authCode)
+    {
+        $api = sprintf(self::GET_PERMANENT_CODE,$suiteAccessToken);
+
+        $data = [
+            'suite_id' =>$suiteId,
+            'auth_code'=>$authCode
+        ];
+
+        $result = Requests::post($api,[],json_encode($data));
+        $body = json_decode($result->body);
+
+        return $body;
+
     }
 
 
